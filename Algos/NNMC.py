@@ -4,7 +4,7 @@ from copy import deepcopy
 
 
         
-def NNMC(X,M,Z,Sampled_mask,Nu,ep,threshold_lambda,rho=1,beta=1,max_iter=1000, min_iter=1):
+def NNMC(X, M, Z, Sampled_mask, Nu, epsilon, threshold_lambda, rho=1, beta=1, max_iter=1000, min_iter=1):
     '''
     Non-negative Matrix Completion algorithm with ADMM implementation as described in the paper: doi: 10.1109/MLSP.2013.6661924
     X: matrix to complete
@@ -39,7 +39,7 @@ def NNMC(X,M,Z,Sampled_mask,Nu,ep,threshold_lambda,rho=1,beta=1,max_iter=1000, m
         
         error_current = np.max(np.abs(M_prev - M))
         
-        if error_current < ep and iteration >= min_iter:
+        if error_current < epsilon and iteration >= min_iter:
             print(f'Converged at iteration {iteration} to error {error_current}')
             break
         else:

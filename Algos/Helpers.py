@@ -100,6 +100,17 @@ def ISDivergence(x,y):
     # the Itakura-Saito divergence function
     return x/y - np.log(x/y)-1
 
+#Sparsity calculation
+def calculate_sparsity(X):
+    '''
+    Calculate the sparsity of a matrix X, defined as the percentage of zero elements in the matrix
+    X: the matrix to calculate the sparsity of
+    '''
+    total_elements = X.size
+    zero_elements = np.count_nonzero(X == 0)
+    sparsity = (zero_elements / total_elements) * 100
+    return sparsity
+
 def generate_simulated_IMS_matrix(m=50000, n=500, rank=100, seed=42, random_mean=1.0, random_scale=1, batch_contrast=2, batch_abondance=200, remove_batches=True):
     """
     DEPRECATED: DON'T USE
