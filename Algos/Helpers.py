@@ -100,7 +100,11 @@ def ISDivergence(x,y):
     # the Itakura-Saito divergence function
     return x/y - np.log(x/y)-1
 
-#Sparsity calculation
+def positive_projection(F):
+    # for loc in np.argwhere(F<0):
+    #     F[loc[0],loc[1]] = 0
+    return np.maximum(F, 0)
+
 def calculate_sparsity(X):
     '''
     Calculate the sparsity of a matrix X, defined as the percentage of zero elements in the matrix
