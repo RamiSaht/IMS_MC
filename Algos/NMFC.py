@@ -1,12 +1,9 @@
 import numpy as np
-import matplotlib.pyplot as plt
-from numpy.linalg import inv , norm
-from Helpers import positive_projection, sample_from_matrix,insampling_error_relative,out_of_sample_error_relative,general_error_relative
-from time import perf_counter
-from NMF import NMF
+from numpy.linalg import inv, norm
+from Helpers import positive_projection, insampling_error_relative
 
 
-# VALODATION
+# VALIDATION
 # random_m = 500
 # random_n = 500
 # random_rank = 20
