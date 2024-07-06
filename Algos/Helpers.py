@@ -203,6 +203,28 @@ def OGM_calculate_objective_function_unobserved(W, H, X, Omega):
     objective_percentage = (re_er / data_norm_squared) * 100
     return objective_percentage
 
+def k_0_finder(tau, step_size, sampled_entries):
+    """
+    Find the initial value of k_0.
+    """
+    return np.ceil(tau / (step_size * np.linalg.norm(sampled_entries, 2)))
+
+def projection_operator(M_sampled, X):
+    """
+    Compute the projection operator for matrix completion.
+    """
+    filled_M_sampled = np.where(M_sampled == 0, X, M_sampled)
+    projection = X - filled_M_sampled
+    return projection
+
+def suggested_stop(X_k, original_sampled, tolerance):
+    """
+    Check the stopping condition based on the relative difference between X_k and the original sampled matrix.
+    """
+    rel_error = np.linalg.norm(projection_operator(original_sampled, X_k), 'fro') / np.linalg.norm(original_sampled, 'fro')
+    # print("Current relative in-sampling error:", rel_error)
+    return rel_error <= tolerance
+
 def generate_simulated_IMS_matrix(m=50000, n=500, rank=100, seed=42, random_mean=1.0, random_scale=1, batch_contrast=2, batch_abondance=200, remove_batches=True):
     """
     DEPRECATED: DON'T USE

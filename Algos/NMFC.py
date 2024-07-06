@@ -1,6 +1,6 @@
 import numpy as np
 from numpy.linalg import inv, norm
-from Helpers import positive_projection, insampling_error_relative
+from Algos.Helpers import positive_projection, insampling_error_relative
 
 
 # VALIDATION
@@ -27,7 +27,7 @@ def projection_operator(A, M):
 def NMFC(M, k,Sampled_mask, alpha_factor, alpha_choice, max_iter=500, epsilon=1e-5):
     '''
     Factorize a matrix M into two non-negative matrices X and Y using the Alternating Direction Method of Multipliers (ADMM) algorithm. As defined in the paper: doi: 10.1007/s11464-012-0194-5
-    M: the matrix to factorize
+    M: the matrix to factorize (with missing entries)
     k: the rank of the factorization
     alpha_factor: the factor to scale the alpha parameter
     alpha_choice: the choice of alpha parameter calculation, 1 or 2
