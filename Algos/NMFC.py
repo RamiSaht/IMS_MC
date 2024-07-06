@@ -1,6 +1,6 @@
 import numpy as np
 from numpy.linalg import inv, norm
-from Algos.Helpers import positive_projection, insampling_error_relative
+from Algos.Helpers import positive_projection, insampling_error_relative, projection_mask_operator
 
 
 # VALIDATION
@@ -18,11 +18,6 @@ from Algos.Helpers import positive_projection, insampling_error_relative
 # sampled_random_data50,coords50,coords50TF = sample_from_matrix(random_data,0.5)
 # sampled_random_data25,coords25,coords25TF = sample_from_matrix(random_data,0.25)
 
-def projection_operator(A, M):
-    # Assuming M contains the mask of observed elements
-    mask = (M != 0)
-    return A * mask
-
 
 def NMFC(M, k,Sampled_mask, alpha_factor, alpha_choice, max_iter=500, epsilon=1e-5):
     '''
@@ -37,7 +32,7 @@ def NMFC(M, k,Sampled_mask, alpha_factor, alpha_choice, max_iter=500, epsilon=1e
     '''
     
     # Define a projection operator which may involve some form of dimensionality reduction or approximation
-    A = projection_operator(M, M)
+    A = projection_mask_operator(M, M)
     m, n = A.shape  # Dimensions of the matrix A
 
     # Calculate the Frobenius norm of matrix A
@@ -88,7 +83,7 @@ def NMFC(M, k,Sampled_mask, alpha_factor, alpha_choice, max_iter=500, epsilon=1e
         Y_next = positive_projection(inv(X_next.T @ X_next + beta * np.diag(np.ones(k))) @ (X_next.T @ Z + beta * V - Pi))
         
         # Update Z by projecting onto some subspace defined by projection_operator
-        Z_next = X_next @ Y_next + projection_operator(M - (X_next @ Y_next), M)
+        Z_next = X_next @ Y_next + projection_mask_operator(M - (X_next @ Y_next), M)
 
         # Project U and V to ensure they remain positive
         U_next = positive_projection(X_next + Lambda / alpha)
@@ -96,11 +91,10 @@ def NMFC(M, k,Sampled_mask, alpha_factor, alpha_choice, max_iter=500, epsilon=1e
 
         # Update Lagrange multipliers Lambda and Pi
         Lambda_next = Lambda + gamma * alpha * (X_next - U_next)
-
         Pi_next = Pi + gamma * beta * (Y_next - V_next)
 
-        f_k = norm(projection_operator(X @ Y - A, M), 'fro') / frobenius_A
-        f_k1 = norm(projection_operator(X_next @ Y_next - A, M), 'fro') / frobenius_A
+        f_k = norm(projection_mask_operator(X @ Y - A, M), 'fro') / frobenius_A
+        f_k1 = norm(projection_mask_operator(X_next @ Y_next - A, M), 'fro') / frobenius_A
         intermediate_error.append(insampling_error_relative(M, X_next @ Y_next, Sampled_mask))
         print(i, insampling_error_relative(M, X_next @ Y_next, Sampled_mask))
         

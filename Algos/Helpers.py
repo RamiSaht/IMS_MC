@@ -217,6 +217,11 @@ def projection_operator(M_sampled, X):
     projection = X - filled_M_sampled
     return projection
 
+def projection_mask_operator(A, M):
+    # Assuming M contains the mask of observed elements
+    mask = (M != 0)
+    return A * mask
+
 def suggested_stop(X_k, original_sampled, tolerance):
     """
     Check the stopping condition based on the relative difference between X_k and the original sampled matrix.
